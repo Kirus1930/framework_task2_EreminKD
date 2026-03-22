@@ -1,4 +1,4 @@
-namespace ModularApp.Core
+namespace BuildingMaterialsCatalog.Core
 {
     public class ModuleException : Exception
     {
