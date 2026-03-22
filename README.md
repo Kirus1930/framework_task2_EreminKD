@@ -3,7 +3,7 @@
 
 ### Запуск
 ```bash
-cd BuildingMaterialsCatalog
+cd ModularApp
 
 dotnet run
 ```
