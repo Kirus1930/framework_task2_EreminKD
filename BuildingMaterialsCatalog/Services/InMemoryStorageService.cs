@@ -1,3 +1,22 @@
+namespace BuildingMaterialsCatalog.Services
+{
+    public class InMemoryStorageService : IStorageService
+    {
+        private readonly List<string> _items = new();
+
+        public void Add(string item)
+        {
+            _items.Add(item);
+        }
+
+        public List<string> GetAll()
+        {
+            return _items;
+        }
+    }
+}
+
+/*
 using System.Collections.Concurrent;
 using BuildingMaterialsCatalog.Models;
 
@@ -42,3 +61,4 @@ public class InMemoryStorageService : IStorageService
         return _storage.TryRemove(id, out _);
     }
 }
+*/
