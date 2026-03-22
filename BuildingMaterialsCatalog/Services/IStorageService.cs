@@ -1,5 +1,15 @@
 using BuildingMaterialsCatalog.Models;
 
+namespace BuildingMaterialsCatalog.Services
+{
+    public interface IStorageService
+    {
+        void Add(string item);
+        List<string> GetAll();
+    }
+}
+
+/*
 namespace BuildingMaterialsCatalog.Services;
 
 public interface IStorageService
@@ -9,3 +19,4 @@ public interface IStorageService
     Task<BuildingMaterial> CreateAsync(BuildingMaterialCreateDto dto);
     bool Delete(Guid id);
 }
+*/
