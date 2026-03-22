@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ModularApp.Core
+namespace BuildingMaterialsCatalog.Core
 {
     public interface IModule
     {
