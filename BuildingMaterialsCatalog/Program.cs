@@ -1,3 +1,42 @@
+using BuildingMaterialsCatalog.Core;
+using Microsoft.Extensions.DependencyInjection;
+
+var services = new ServiceCollection();
+
+var loader = new ModuleLoader();
+
+var modules = loader.LoadModules();
+
+var resolver = new ModuleDependencyResolver();
+
+List<IModule> orderedModules;
+
+try
+{
+    orderedModules = resolver.Resolve(modules);
+}
+catch (ModuleException ex)
+{
+    Console.WriteLine("Module loading error:");
+    Console.WriteLine(ex.Message);
+    return;
+}
+
+foreach (var module in orderedModules)
+{
+    module.RegisterServices(services);
+}
+
+var provider = services.BuildServiceProvider();
+
+foreach (var module in orderedModules)
+{
+    module.Initialize(provider);
+}
+
+Console.WriteLine("Application started successfully.");
+
+/*
 using BuildingMaterialsCatalog.Middleware;
 using BuildingMaterialsCatalog.Services;
 using BuildingMaterialsCatalog.Validators;
@@ -51,3 +90,4 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+*/
