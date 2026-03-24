@@ -20,7 +20,7 @@ namespace ModularApp.Core
         {
             if (visited.Contains(m.Name)) return;
             if (visiting.Contains(m.Name))
-                throw new ModuleException("Cycle detected");
+                throw new ModuleException($"Cycle detected at {m.Name}");
 
             visiting.Add(m.Name);
 
