@@ -1,17 +1,45 @@
 using ModularApp.Core;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 
 var services = new ServiceCollection();
 
+// Чтение config
+var config = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json")
+    .Build();
+
+var enabledModules = config.GetSection("Modules").Get<List<string>>();
+
 var loader = new ModuleLoader();
-var modules = loader.LoadModules();
+var allModules = loader.LoadModules();
+
+// Фильтрация
+var modules = allModules
+    .Where(m => enabledModules.Contains(m.Name))
+    .ToList();
+
+// Проверка зависимостей в config
+foreach (var module in modules)
+{
+    foreach (var dep in module.Dependencies)
+    {
+        if (!enabledModules.Contains(dep))
+        {
+            Console.WriteLine(
+                $"Error: Module '{module.Name}' requires '{dep}', but it is not enabled.");
+            return;
+        }
+    }
+}
 
 var resolver = new ModuleDependencyResolver();
-List<IModule> ordered;
+
+List<IModule> orderedModules;
 
 try
 {
-    ordered = resolver.Resolve(modules);
+    orderedModules = resolver.Resolve(modules);
 }
 catch (ModuleException ex)
 {
@@ -19,12 +47,18 @@ catch (ModuleException ex)
     return;
 }
 
-foreach (var m in ordered)
-    m.RegisterServices(services);
+// Регистрация сервисов
+foreach (var module in orderedModules)
+{
+    module.RegisterServices(services);
+}
 
 var provider = services.BuildServiceProvider();
 
-foreach (var m in ordered)
-    m.Initialize(provider);
+// Запуск модулей
+foreach (var module in orderedModules)
+{
+    module.Initialize(provider);
+}
 
-Console.WriteLine("App started");
+Console.WriteLine("Application started successfully.");
