@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 
 var services = new ServiceCollection();
 
-// Чтение config
 var config = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
     .Build();
@@ -14,32 +13,28 @@ var enabledModules = config.GetSection("Modules").Get<List<string>>();
 var loader = new ModuleLoader();
 var allModules = loader.LoadModules();
 
-// Фильтрация
 var modules = allModules
     .Where(m => enabledModules.Contains(m.Name))
     .ToList();
 
-// Проверка зависимостей в config
 foreach (var module in modules)
 {
     foreach (var dep in module.Dependencies)
     {
         if (!enabledModules.Contains(dep))
         {
-            Console.WriteLine(
-                $"Error: Module '{module.Name}' requires '{dep}', but it is not enabled.");
+            Console.WriteLine($"Error: {module.Name} requires {dep}");
             return;
         }
     }
 }
 
 var resolver = new ModuleDependencyResolver();
-
-List<IModule> orderedModules;
+List<IModule> ordered;
 
 try
 {
-    orderedModules = resolver.Resolve(modules);
+    ordered = resolver.Resolve(modules);
 }
 catch (ModuleException ex)
 {
@@ -47,18 +42,12 @@ catch (ModuleException ex)
     return;
 }
 
-// Регистрация сервисов
-foreach (var module in orderedModules)
-{
-    module.RegisterServices(services);
-}
+foreach (var m in ordered)
+    m.RegisterServices(services);
 
 var provider = services.BuildServiceProvider();
 
-// Запуск модулей
-foreach (var module in orderedModules)
-{
-    module.Initialize(provider);
-}
+foreach (var m in ordered)
+    m.Initialize(provider);
 
-Console.WriteLine("Application started successfully.");
+Console.WriteLine("App started");
