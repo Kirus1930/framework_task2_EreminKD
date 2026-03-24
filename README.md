@@ -5,51 +5,121 @@
 ```bash
 cd ModularApp
 
+// Если решение еще не собрано
+dotnet build
+
+// Если решение собрано
+dotnet restore
+
 dotnet run
 ```
 Сервер запустится на `http://localhost:5000`.
 
-### Доступные endpoints
+#### В данном проекте - модульное приложение на .NET, в котором функциональность расширяется за счет подключения независимых модулей без изменения ядра. Проект демонстрирует:
+#### 1. работу с контейнером внедрения зависимостей (DI)
+#### 2. реализацию модульной архитектуры
+#### 3. управление зависимостями между модулями
+#### 4. загрузку модулей через reflection
 
-| Метод | URL                  | Описание                          |
-|-------|----------------------|-----------------------------------|
-| GET   | `/`                  | Информация об API                 |
-| GET   | `/api/materials`     | Список всех материалов            |
-| GET   | `/api/materials/{id}`| Материал по ID                    |
-| POST  | `/api/materials`     | Создать новый материал            |
-|DELETE | `/api/materials/{id}`| Удалить материал по ID            |
+### Рабочий цикл:
+#### При запуске выполняются следующие шаги:
+#### 1. Читается appsettings.json
+#### 2. Загружаются все модули через reflection
+#### 3. Фильтруются модули по конфигурации
+#### 4. Проверяются зависимости
+#### 5. Выполняется топологическая сортировка
+#### 6. Регистрируются сервисы в DI
+#### 7. Вызывается Initialize у модулей
 
-### Примеры запросов
-
-### Получить все материалы
-```bash
-curl http://localhost:5000/api/materials
+### Паттерны:
+1. Dependency Injection (DI)
+Где используется:
+```
+IServiceCollection
+IServiceProvider
 ```
 
-### Создать материал
-```bash
-curl -X POST http://localhost:5000/api/materials \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Кирпич","unitOfMeasure":"pcs","pricePerUnit":25,"quantityInStock":1000}'
+Суть:
+
+Объекты не создаются вручную, а внедряются контейнером.
+
+Пример:
+```
+public ReportService(IStorageService storage)
 ```
 
-### Получить материал по ID
-```bash
-curl http://localhost:5000/api/materials/{id}
+Это решает проблему:
+
+"создание объектов не размазывается по коду"
+
+2. Inversion of Control (IoC)
+Суть:
+
+Приложение не управляет зависимостями напрямую — это делает контейнер.
+
+В проекте:
+```
+services.AddSingleton<IStorageService, InMemoryStorageService>();
 ```
 
-### Удалить материал по ID
-```bash
-curl -X DELETE http://localhost:5000/api/materials/{id}
+3. Plugin / Modular Architecture
+Суть:
+
+Система расширяется через модули.
+
+В проекте:
+```
+IModule
 ```
 
-## Формат ошибок
-Все ошибки возвращаются в едином формате:
-```json
-{
-  "errorCode": "VALIDATION_ERROR",
-  "message": "Name is required.",
-  "requestId": "a1b2c3d4-...",
-  "timestamp": "2025-02-23T12:00:00Z"
-}
+Каждый модуль:
+
+независим
+подключается без изменения ядра
+
+4. Dependency Graph + Topological Sort
+Где:
 ```
+ModuleDependencyResolver
+```
+
+Суть:
+модули образуют граф зависимостей
+порядок определяется через топологическую сортировку
+
+Решает:
+
+порядок запуска
+проверку циклов
+
+5. Reflection
+Где:
+```
+Assembly.GetExecutingAssembly().GetTypes()
+```
+
+Суть:
+
+Программа сама находит модули, без ручного списка.
+
+6. Fail Fast
+Суть:
+
+Приложение сразу падает, если есть ошибка:
+
+нет модуля
+цикл зависимостей
+
+Пример:
+```
+throw new ModuleException(...)
+```
+
+7. Separation of Concerns
+
+Разделение ответственности:
+
+Core -> логика модулей
+Modules -> бизнес-логика
+Services -> данные и операции
+Tests -> проверки
