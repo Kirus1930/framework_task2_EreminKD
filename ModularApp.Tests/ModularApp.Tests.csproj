@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ModularApp.csproj" />
+    <ProjectReference Include="..\ModularApp\ModularApp.csproj" />
   </ItemGroup>
 
 </Project>
