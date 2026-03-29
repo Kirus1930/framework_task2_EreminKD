@@ -17,6 +17,8 @@ dotnet restore
 dotnet run
 
 // Запуск тестов
+cd ModularApp.Tests
+
 dotnet test
 ```
 
