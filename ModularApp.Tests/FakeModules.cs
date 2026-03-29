@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using ModularApp.Core;
 using Microsoft.Extensions.DependencyInjection;
 
