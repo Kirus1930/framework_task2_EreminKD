@@ -130,3 +130,56 @@ Core -> логика модулей
 Modules -> бизнес-логика
 Services -> данные и операции
 Tests -> проверки
+
+### Добавление новых модулей
+
+Для проверки расширяемости был добавлен новый модуль без изменения ядра приложения.
+
+Шаги проверки:
+
+1. Создан новый модуль, реализующий интерфейс IModule.
+2. В модуле указано имя и зависимости.
+3. Модуль добавлен в конфигурационный файл appsettings.json.
+4. Приложение было запущено без изменения кода ядра.
+
+Результат:
+- модуль автоматически обнаружен через reflection
+- его зависимости проверены
+- модуль был запущен в корректном порядке
+- его функциональность повлияла на поведение программы
+
+Это подтверждает, что архитектура является расширяемой,
+и добавление нового модуля не требует изменения существующего кода.
+
+Пример нового модуля (для демонстрации)
+```cs
+public class LoggingModule : IModule
+{
+    public string Name => "Logging";
+
+    public IEnumerable<string> Dependencies => new[] { "Storage" };
+
+    public void RegisterServices(IServiceCollection services)
+    {
+        services.AddSingleton<LoggingService>();
+    }
+
+    public void Initialize(IServiceProvider provider)
+    {
+        Console.WriteLine("Logging initialized");
+    }
+}
+```
+
+Добавляем в config:
+```json
+{
+  "Modules": ["Storage", "Logging"]
+}
+```
+
+Ожидаемый результат:
+```bash
+Storage initialized
+Logging initialized
+```
