@@ -1,0 +1,5 @@
+C:\Users\Kiril\Documents\GitHub\framework_task2_EreminKD\ModularApp.Tests\obj\Debug\net8.0\ModularApp.Tests.csproj.AssemblyReference.cache
+C:\Users\Kiril\Documents\GitHub\framework_task2_EreminKD\ModularApp.Tests\obj\Debug\net8.0\ModularApp.Tests.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Kiril\Documents\GitHub\framework_task2_EreminKD\ModularApp.Tests\obj\Debug\net8.0\ModularApp.Tests.AssemblyInfoInputs.cache
+C:\Users\Kiril\Documents\GitHub\framework_task2_EreminKD\ModularApp.Tests\obj\Debug\net8.0\ModularApp.Tests.AssemblyInfo.cs
+C:\Users\Kiril\Documents\GitHub\framework_task2_EreminKD\ModularApp.Tests\obj\Debug\net8.0\ModularApp.Tests.csproj.CoreCompileInputs.cache
