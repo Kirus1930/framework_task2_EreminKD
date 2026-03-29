@@ -1,7 +1,8 @@
+using System;
+using System.Reflection;
 using Xunit;
 using Microsoft.Extensions.DependencyInjection;
 using ModularApp.Services;
-using System.Reflection;
 
 namespace ModularApp.Tests
 {
