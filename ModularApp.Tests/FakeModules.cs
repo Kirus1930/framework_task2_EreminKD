@@ -1,3 +1,4 @@
+// Набор тестовых модулей для разных сценариев
 using System;
 using System.Collections.Generic;
 using ModularApp.Core;
