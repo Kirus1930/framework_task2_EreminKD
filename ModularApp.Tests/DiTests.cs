@@ -1,3 +1,4 @@
+// Проверка, что зависимости внедряются через DI
 using System;
 using System.Reflection;
 using Xunit;
