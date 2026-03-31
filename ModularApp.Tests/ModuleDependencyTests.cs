@@ -1,3 +1,4 @@
+// Тесты зависимостей и порядка запуска
 using System;
 using System.Collections.Generic;
 using System.Linq;
