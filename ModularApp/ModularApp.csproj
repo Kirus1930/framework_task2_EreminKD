@@ -20,8 +20,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Include="LoggingModule.cs" />
-  </ItemGroup>
-
 </Project>
